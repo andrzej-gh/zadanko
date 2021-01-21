@@ -51,21 +51,30 @@ void printList()
 	}
 }
 
-void listSort()
+void listSort(bool sortByText)
 {
-	int tempNumber;
+	Entry* temp;
 	std::string tempText;
-	if (list != nullptr) {
-		Entry* cur = list;
+	if (list != nullptr && list->next != nullptr) {
 		for (Entry* i = list; i->next != nullptr; i = i->next) {
-			for (Entry* j = list; j->next != nullptr; j = j->next) {
-				if (i->number < j->number) {
-					tempNumber = i->number;
-					tempText = i->text;
-					i->number = j->number;
-					i->text = j->text;
-					j->number = tempNumber;
-					j->text = tempText;
+			for (Entry* j = i->next; j->next != nullptr; j = j->next) {
+				if ((j->prev->number < j->number && !sortByText) ||
+				    (j->prev->text.compare(j->text) > 0 && sortByText)) {
+				    Entry * l = j->prev;
+					Entry * r = j;
+					temp = l->prev;
+					if(l->prev != nullptr) {
+						l->prev->next = r;
+					} else {
+						list = r;
+					}
+					if(r->next != nullptr) {
+						r->next->prev = l;
+					}
+					l->next = r->next;
+					l->prev = r;
+					r->prev = temp;
+					r->next = l;
 				}
 			}
 		}
@@ -73,30 +82,6 @@ void listSort()
 		std::cout << "ERROR! Called Sort on non existing list" << std::endl;
 	}
 }
-
-void listSortByText()
-{
-	int tempNumber;
-	std::string tempText;
-	if (list != nullptr) {
-		Entry* cur = list;
-		for (Entry* i = list; i->next != nullptr; i = i->next) {
-			for (Entry* j = list; j->next != nullptr; j = j->next) {
-				if (i->text.compare(j->text) > 0 ) {
-					tempNumber = i->number;
-					tempText = i->text;
-					i->number = j->number;
-					i->text = j->text;
-					j->number = tempNumber;
-					j->text = tempText;
-				}
-			}
-		}
-	} else {
-		std::cout << "ERROR! Called Sort on non existing list" << std::endl;
-	}
-}
-
 
 void listDelete()
 {
@@ -143,7 +128,7 @@ void DataSorterThread()
 		listMutex.lock();
 		if (numElems - sortedElems >= 10) {
 			std::cout << "Sorting " << numElems << " Elements" << std::endl;
-			listSort();
+			listSort(false);
 			sortedElems = numElems;
 		}
 		if(numElems >= 100) {
@@ -165,10 +150,11 @@ int main()
     dataGen.join();
     dataSort.join();
     std::cout << "List sorted by number: " << std::endl;
-    listSort();
+    listSort(false);
     printList();
+    std::cout << "------------------------------------------" << std::endl;
     std::cout << "List sorted by text: " << std::endl;
-    listSortByText();
+    listSort(true);
     printList();
 
 	system("pause");
