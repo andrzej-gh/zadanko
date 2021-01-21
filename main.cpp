@@ -145,17 +145,17 @@ void DataSorterThread()
 
 int main()
 {
-    std::thread dataGen(DataGeneratorThread);
-    std::thread dataSort(DataSorterThread);
-    dataGen.join();
-    dataSort.join();
-    std::cout << "List sorted by number: " << std::endl;
-    listSort(false);
-    printList();
-    std::cout << "------------------------------------------" << std::endl;
-    std::cout << "List sorted by text: " << std::endl;
-    listSort(true);
-    printList();
+	std::thread dataGen(DataGeneratorThread);
+	std::thread dataSort(DataSorterThread);
+	dataGen.join();
+	dataSort.join();
+	std::cout << "List sorted by number: " << std::endl;
+	listSort(false);
+	printList();
+	std::cout << "------------------------------------------" << std::endl;
+	std::cout << "List sorted by text: " << std::endl;
+	listSort(true);
+	printList();
 
 	system("pause");
 	listDelete();
