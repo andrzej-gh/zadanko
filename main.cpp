@@ -60,7 +60,7 @@ void listSort(bool sortByText)
 			for (Entry* j = i->next; j->next != nullptr; j = j->next) {
 				if ((j->prev->number < j->number && !sortByText) ||
 				    (j->prev->text.compare(j->text) > 0 && sortByText)) {
-				    Entry * l = j->prev;
+					Entry * l = j->prev;
 					Entry * r = j;
 					temp = l->prev;
 					if(l->prev != nullptr) {
