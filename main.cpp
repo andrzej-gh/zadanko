@@ -91,7 +91,7 @@ void listDelete()
 		while (cur->next != nullptr) {
 			next = cur->next;
 			delete cur;
-			cur = cur->next;
+			cur = next;
 		}
 	}
 }
